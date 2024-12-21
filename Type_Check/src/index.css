@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.image-small {
+    width:1rem;
+    height:1rem;
+}
+
+.pointer-cursor {
+    cursor: pointer;
+}
