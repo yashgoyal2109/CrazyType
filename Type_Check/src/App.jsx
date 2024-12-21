@@ -9,19 +9,23 @@ function App() {
   const [caret, changeCaret] = useState(0);
   const [data, setData] = useState(null);
   const [count, setCount] = useState(0);
+  const [letterStatus, setLetterStatus] = useState([]);
+  const [greencount, setgreenCount] = useState(0);
+  const [redcount, setredCount] = useState(0);
+  const [wordcount, setwordCount] = useState(0);
+  const [notfinish, setnotFinish] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleNav = () => {
-    if (caret === word.length) {
-      navigate("/results");
-    }
-  };
-
 
   useEffect(() => {
-    handleNav();
-  }, [caret]); 
+    if (caret === word.length) {
+      setnotFinish(false);
+    } else {
+      setnotFinish(true);
+    }
+  }, [caret, word.length]);
+
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -55,9 +59,40 @@ function App() {
       .catch((error) => console.error(error));
   }, [count]);
 
+  useEffect(() => {
+    const spellCheck = () => {
+      let greenCountTemp = 0;
+      let redCountTemp = 0;
+      const wordCountTemp = inputValue.split(" ").filter(Boolean).length;
+
+
+      const updatedStatus = word.split("").map((letter, index) => {
+        if (inputValue[index] === undefined) {
+          return "text-text_color";
+        } else if (inputValue[index] === letter) {
+          greenCountTemp++;
+          return "text-green-500";
+        } else {
+          redCountTemp++;
+          return "text-red-500";
+        }
+      });
+
+      
+      setLetterStatus(updatedStatus);
+      setgreenCount(greenCountTemp);
+      setredCount(redCountTemp);
+      setwordCount(wordCountTemp);
+    };
+
+    spellCheck();
+  }, [inputValue, word]);
+
+
   const callApi = () => {
     setCount(count + 1);
   };
+
 
   return (
     <div className="flex flex-col items-center h-screen justify-between px-[7rem] py-10 bg-main_bg">
@@ -80,44 +115,59 @@ function App() {
           </div>
         </div>
       </div>
-      <div>
-        <div className="p-8 font-mono">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => {
-              console.log("Input onChange:", e.target.value);
-              setInputValue(e.target.value);
-            }}
-            className="sr-only"
-            autoFocus
-          />
-          <div className="relative inline-block text-xl leading-relaxed whitespace-pre-wrap break-all">
-            {word.split("").map((letter, index) => (
-              <span
-                key={index}
-                className={`${
-                  inputValue[index] === undefined
-                    ? "text-text_color"
-                    : inputValue[index] === letter
-                    ? "text-green-500"
-                    : "text-red-500"
-                } relative inline-block`}
-              >
-                {letter}
-                {index === caret && (
-                  <span
-                    className="absolute top-0 left-0 animate-pulse bg-yellow-500 w-0.5 h-7"
-                    style={{
-                      transform: "translateX(-50%)",
-                    }}
-                  />
-                )}
-              </span>
-            ))}
+
+      {notfinish ? (
+        <div>
+          <div className="p-8 font-mono">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => {
+                console.log("Input onChange:", e.target.value);
+                setInputValue(e.target.value);
+              }}
+              className="sr-only"
+              autoFocus
+            />
+            <div className="relative inline-block text-xl leading-relaxed whitespace-pre-wrap break-all">
+              {word.split("").map((letter, index) => (
+                <span
+                  key={index}
+                  className={`${letterStatus[index]}
+                  relative inline-block`}
+                >
+                  {letter}
+                  {index === caret && (
+                    <span
+                      className="absolute top-0 left-0 animate-pulse bg-yellow-500 w-0.5 h-7"
+                      style={{
+                        transform: "translateX(-50%)",
+                      }}
+                    />
+                  )}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )
+        :
+        (
+
+
+
+          <div className="flex flex-col">
+            <p>{greencount - wordcount || 0}</p>
+            <p>{wordcount || 0}</p>
+            <p>{redcount || 0}</p>
+          </div>
+
+
+
+
+
+        )}
+
       <div>
         <p className="text-text_color">Type the text above</p>
       </div>
