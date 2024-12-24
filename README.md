@@ -10,10 +10,7 @@ DevType is a modern typing speed testing application inspired by platforms like 
 2. [Tech Stack](#tech-stack)
 3. [Installation](#installation)
 4. [API Endpoints](#api-endpoints)
-5. [Known Errors](#known-errors)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Acknowledgments](#acknowledgments)
+5. [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -109,6 +106,21 @@ DevType is a modern typing speed testing application inspired by platforms like 
 
 ---
 
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/login`: User login and JWT token issuance.
+- `POST /api/auth/signup`: New user registration.
+
+### Typing Tests
+- `GET /api/tests`: Retrieve past test results for a user.
+- `POST /api/tests`: Submit a new typing test result.
+
+### User Profile
+- `GET /api/users/:id`: Retrieve user profile details.
+- `PUT /api/users/:id`: Update user profile information.
+
+---
 
 
 ## Acknowledgments
