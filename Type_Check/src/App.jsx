@@ -7,31 +7,45 @@ function App() {
   const [word, setWord] = useState("hi my name is yash goyal");
   const [inputValue, setInputValue] = useState("");
   const [caret, changeCaret] = useState(0);
-  const [data, setData] = useState(null);
-  const [count, setCount] = useState(0);
   const [letterStatus, setLetterStatus] = useState([]);
   const [greencount, setgreenCount] = useState(0);
   const [redcount, setredCount] = useState(0);
   const [wordcount, setwordCount] = useState(0);
   const [notfinish, setnotFinish] = useState(false);
-
+  const [startTime, setStartTime] = useState(null);
+  const [count, setCount] = useState(0);
+  const [wpm, setWpm] = useState(0);
+  const [accuracy, setAccuracy] = useState(100);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (caret === word.length) {
       setnotFinish(false);
+
+      // Calculate WPM and Accuracy
+      const endTime = Date.now();
+      const timeTakenInMinutes = (endTime - startTime) / 60000; // Convert milliseconds to minutes
+      const calculatedWpm = (greencount / 5) / timeTakenInMinutes; // Assuming 5 chars per word
+      const calculatedAccuracy =
+        inputValue.length > 0 ? (greencount / inputValue.length) * 100 : 100;
+
+      setWpm(calculatedWpm.toFixed(2));
+      setAccuracy(calculatedAccuracy.toFixed(2));
     } else {
       setnotFinish(true);
     }
-  }, [caret, word.length]);
-
+  }, [caret, word.length, greencount, inputValue.length, startTime]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.ctrlKey) {
         return;
       }
+
+      if (!startTime) {
+        setStartTime(Date.now());
+      }
+
       if (e.key === "Backspace") {
         e.preventDefault();
         if (inputValue.length > 0) {
@@ -47,13 +61,12 @@ function App() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [word.length, inputValue.length]);
+  }, [word.length, inputValue.length, startTime]);
 
   useEffect(() => {
     axios
       .get("https://api.chucknorris.io/jokes/random")
       .then((response) => {
-        setData(response.data);
         setWord(response.data.value);
       })
       .catch((error) => console.error(error));
@@ -63,8 +76,6 @@ function App() {
     const spellCheck = () => {
       let greenCountTemp = 0;
       let redCountTemp = 0;
-      const wordCountTemp = inputValue.split(" ").filter(Boolean).length;
-
 
       const updatedStatus = word.split("").map((letter, index) => {
         if (inputValue[index] === undefined) {
@@ -78,28 +89,24 @@ function App() {
         }
       });
 
-      
       setLetterStatus(updatedStatus);
       setgreenCount(greenCountTemp);
       setredCount(redCountTemp);
-      setwordCount(wordCountTemp);
     };
 
     spellCheck();
   }, [inputValue, word]);
 
-
   const callApi = () => {
-    setCount(count + 1);
+    setCount((prev) => prev + 1);
   };
-
 
   return (
     <div className="flex flex-col items-center h-screen justify-between px-[7rem] py-10 bg-main_bg">
       <div className="flex flex-row justify-between w-full items-center">
         <div className="w-1/3">
           <div className="flex items-baseline justify-evenly">
-            <img src={symbol} alt="gerhe" className="w-10 cursor-pointer" />
+            <img src={symbol} alt="logo" className="w-10 cursor-pointer" />
             <p className="text-2xl font-bold cursor-pointer text-heading_color">CrazyType</p>
             <img src={keypic} alt="" className="image-small cursor-pointer" onClick={callApi} />
             <img src={crown} alt="" className="image-small cursor-pointer" />
@@ -122,10 +129,7 @@ function App() {
             <input
               type="text"
               value={inputValue}
-              onChange={(e) => {
-                console.log("Input onChange:", e.target.value);
-                setInputValue(e.target.value);
-              }}
+              onChange={(e) => setInputValue(e.target.value)}
               className="sr-only"
               autoFocus
             />
@@ -133,8 +137,7 @@ function App() {
               {word.split("").map((letter, index) => (
                 <span
                   key={index}
-                  className={`${letterStatus[index]}
-                  relative inline-block`}
+                  className={`${letterStatus[index]} relative inline-block`}
                 >
                   {letter}
                   {index === caret && (
@@ -150,23 +153,25 @@ function App() {
             </div>
           </div>
         </div>
-      )
-        :
-        (
+      ) : (
+        <div className="flex flex-col">
 
-
-
-          <div className="flex flex-col">
-            <p>{greencount - wordcount || 0}</p>
-            <p>{wordcount || 0}</p>
-            <p>{redcount || 0}</p>
+          <div>
+            nguerge
           </div>
+            gerge
 
+          <div>
 
-
-
-
-        )}
+          </div>
+          <p>Correct Letters: {greencount}</p>
+          <p>Word Count: {wordcount}</p>
+          <p>Incorrect Letters: {redcount}</p>
+          <p>Total Time: {(Date.now() - startTime) / 1000} seconds</p>
+          <p>WPM: {wpm}</p>
+          <p>Accuracy: {accuracy}%</p>
+        </div>
+      )}
 
       <div>
         <p className="text-text_color">Type the text above</p>
