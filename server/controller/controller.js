@@ -1,5 +1,5 @@
-const { userSchema } = require("./validator");
-const User = require("./schema");
+const { userSchema } = require("../validator/validator");
+const User = require("../schema");
 const bcrypt = require("bcrypt");
 
 exports.signup = async (req, res) => {

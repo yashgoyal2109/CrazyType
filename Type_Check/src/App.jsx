@@ -2,8 +2,20 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { symbol, keypic, settings, info, crown, bell, user } from "./assets/Index";
 import { useNavigate } from "react-router-dom";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
 function App() {
+
+  const data = [
+    { time: 1, wpm: 0, raw: 0, errors: 0 },
+    { time: 2, wpm: 20, raw: 30, errors: 1 },
+    { time: 3, wpm: 24, raw: 40, errors: 0 },
+    { time: 4, wpm: 30, raw: 50, errors: 1 },
+    { time: 5, wpm: 35, raw: 60, errors: 2 },
+  ];
+
+
+
   const [word, setWord] = useState("hi my name is yash goyal");
   const [inputValue, setInputValue] = useState("");
   const [caret, changeCaret] = useState(0);
@@ -21,16 +33,14 @@ function App() {
   useEffect(() => {
     if (caret === word.length) {
       setnotFinish(false);
-
-      // Calculate WPM and Accuracy
       const endTime = Date.now();
-      const timeTakenInMinutes = (endTime - startTime) / 60000; // Convert milliseconds to minutes
-      const calculatedWpm = (greencount / 5) / timeTakenInMinutes; // Assuming 5 chars per word
+      const timeTakenInMinutes = (endTime - startTime) / 60000; 
+      const calculatedWpm = (greencount / 6) / timeTakenInMinutes; 
       const calculatedAccuracy =
         inputValue.length > 0 ? (greencount / inputValue.length) * 100 : 100;
 
-      setWpm(calculatedWpm.toFixed(2));
-      setAccuracy(calculatedAccuracy.toFixed(2));
+      setWpm(calculatedWpm.toFixed(0));
+      setAccuracy(calculatedAccuracy.toFixed(0));
     } else {
       setnotFinish(true);
     }
@@ -156,20 +166,85 @@ function App() {
       ) : (
         <div className="flex flex-col">
 
-          <div>
-            nguerge
-          </div>
-            gerge
+          <div className="flex justify-center items-center p-10">
 
-          <div>
+            <div>
+              <p className="text-text_color text-xl">WPM: </p>
+              <p className="text-number_color text-4xl"> {wpm}</p>
+              <p className="text-text_color text-xl">Accuracy: </p>
+              <p className="text-number_color text-4xl">{accuracy}%</p>
+            </div>
+            <div>
+              <LineChart
+                width={730}
+                height={250}
+                data={data}
+                margin={{ top: 10, right: 30, left: 30, bottom: 0 }}
+              >
+                <XAxis dataKey="time" label={{ value: "Time", position: "insideBottom", offset: -5 }} />
+                <YAxis
+                  yAxisId="left"
+                  label={{ value: "Words per Minute", angle: -90, position: "insideLeft" }}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  label={{ value: "Errors", angle: -90, position: "insideRight" }}
+                />
+                <Tooltip />
+                <Legend />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="wpm"
+                  stroke="#fadb14"
+                  strokeWidth={2}
+                  dot={false}
+                  name="WPM"
+                />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="raw"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Raw"
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="errors"
+                  stroke="#82ca9d"
+                  strokeWidth={2}
+                  name="Errors"
+                />
+              </LineChart>
+            </div>
+
 
           </div>
-          <p>Correct Letters: {greencount}</p>
-          <p>Word Count: {wordcount}</p>
-          <p>Incorrect Letters: {redcount}</p>
-          <p>Total Time: {(Date.now() - startTime) / 1000} seconds</p>
-          <p>WPM: {wpm}</p>
-          <p>Accuracy: {accuracy}%</p>
+          <div className="flex justify-evenly items-center">
+            <div className="flex flex-col justify-center items-center">
+              <p className="text-text_color text-xl">Correct Letters: </p>
+              <p className="text-number_color text-xl">{greencount}</p>
+            </div>
+
+
+            <div className="flex flex-col items-center">
+              <p className="text-text_color text-xl">Incorrect Letters: </p>
+              <p className="text-number_color text-xl">{redcount}</p>
+            </div>
+
+
+            <div className="flex flex-col items-center">
+              <p className="text-text_color text-xl">Total Time:  </p>
+              <p className="text-number_color text-xl">{((Date.now() - startTime) / 1000).toFixed(0)} sec</p>
+            </div>
+
+          </div>
+
+
         </div>
       )}
 

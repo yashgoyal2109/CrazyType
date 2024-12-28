@@ -8,7 +8,8 @@ module.exports = {
       colors: {
         main_bg : "#323437",
         text_color : "#5f6164",
-        heading_color :"#d1d0c5"
+        heading_color :"#d1d0c5",
+        number_color : "#e2b714"
       },
       animation: {
         pulse: 'pulse 1.2s infinite',
