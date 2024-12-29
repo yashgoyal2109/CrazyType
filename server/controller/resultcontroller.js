@@ -54,3 +54,5 @@ const resultController = {
     }
   }
 };
+
+module.export = resultController;

@@ -6,16 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "r
 
 function App() {
 
-  const data = [
-    { time: 1, wpm: 0, raw: 0, errors: 0 },
-    { time: 2, wpm: 20, raw: 30, errors: 1 },
-    { time: 3, wpm: 24, raw: 40, errors: 0 },
-    { time: 4, wpm: 30, raw: 50, errors: 1 },
-    { time: 5, wpm: 35, raw: 60, errors: 2 },
-  ];
-
-
-
+  const [performanceData, setPerformanceData] = useState([]);
   const [word, setWord] = useState("hi my name is yash goyal");
   const [inputValue, setInputValue] = useState("");
   const [caret, changeCaret] = useState(0);
@@ -30,21 +21,53 @@ function App() {
   const [accuracy, setAccuracy] = useState(100);
   const navigate = useNavigate();
 
+  
+  const submitResult = async () => {
+    try {
+      const resultData = {
+        wpm: parseInt(wpm),
+        accuracy: parseInt(accuracy),
+        timeElapsed: parseInt(((Date.now() - startTime) / 1000).toFixed(0)),
+      };
+  
+      const response = await axios.post("http://localhost:3000/result", resultData, {
+        withCredentials: true
+      });
+      console.log("Result submitted:", response.data);
+    } catch (error) {
+      console.error("Error submitting result:", error);
+      alert("Failed to save result!");
+    }
+  };
+
+
   useEffect(() => {
     if (caret === word.length) {
       setnotFinish(false);
       const endTime = Date.now();
-      const timeTakenInMinutes = (endTime - startTime) / 60000; 
-      const calculatedWpm = (greencount / 6) / timeTakenInMinutes; 
+      const timeTakenInMinutes = (endTime - startTime) / 60000;
+      const calculatedWpm = (greencount / 6) / timeTakenInMinutes;
       const calculatedAccuracy =
         inputValue.length > 0 ? (greencount / inputValue.length) * 100 : 100;
+      const errors = redcount;
+      const rawWpm = (inputValue.length / 6) / timeTakenInMinutes;
 
       setWpm(calculatedWpm.toFixed(0));
       setAccuracy(calculatedAccuracy.toFixed(0));
+
+      setPerformanceData(prevData => {
+        const newDataPoint = {
+          time: prevData.length + 1,
+          wpm: parseInt(calculatedWpm.toFixed(0)),
+          raw: parseInt(rawWpm.toFixed(0)),
+          errors: errors
+        };
+        return [...prevData, newDataPoint];
+      });
     } else {
       setnotFinish(true);
     }
-  }, [caret, word.length, greencount, inputValue.length, startTime]);
+  }, [caret, word.length, greencount, inputValue.length, startTime, redcount]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -178,7 +201,7 @@ function App() {
               <LineChart
                 width={730}
                 height={250}
-                data={data}
+                data={performanceData}
                 margin={{ top: 10, right: 30, left: 30, bottom: 0 }}
               >
                 <XAxis dataKey="time" label={{ value: "Time", position: "insideBottom", offset: -5 }} />
