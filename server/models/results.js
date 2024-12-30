@@ -1,4 +1,4 @@
-
+const mongoose = require("mongoose");
 const resultSchema = new mongoose.Schema({
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +15,7 @@ const resultSchema = new mongoose.Schema({
     },
     timeElapsed: {
       type: Number,
-      required: true  // in seconds
+      required: true  
     },
     completedAt: {
       type: Date,
@@ -24,4 +24,5 @@ const resultSchema = new mongoose.Schema({
   });
   
   const Result = mongoose.model('Result', resultSchema);
+  module.exports = Result;
   

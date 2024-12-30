@@ -1,46 +1,34 @@
-
-const Result = require('../models/Result');
+const Result = require('../models/results');
 
 const resultController = {
   submitResult: async (req, res) => {
+    console.log("Received result submission request");
     try {
       const { wpm, accuracy, rawWpm, characters, timeElapsed } = req.body;
       
       const result = new Result({
-        user: req.user._id,
+        user: "677285ef81a24c46e0c633c3", // hardcoded user's id
         wpm,
         accuracy,
         timeElapsed
       });
       
-      await result.save();
-
-      // Update user's stats
-      const user = req.user;
-      user.testsCompleted += 1;
-      user.averageWPM = ((user.averageWPM * (user.testsCompleted - 1)) + wpm) / user.testsCompleted;
-      user.averageAccuracy = ((user.averageAccuracy * (user.testsCompleted - 1)) + accuracy) / user.testsCompleted;
-      user.highestWPM = Math.max(user.highestWPM, wpm);
-      await user.save();
-
-      res.status(201).json(result);
+      const savedresult = await result.save();
+      res.status(201).json(savedresult);
     } catch (error) {
+      console.error("Error submitting result:", error);
       res.status(400).json({ message: error.message });
     }
   },
-
   getResults: async (req, res) => {
     try {
       const { limit = 10, page = 1 } = req.query;
       const skip = (page - 1) * limit;
-
-      const results = await Result.find({ user: req.user._id })
+      const results = await Result.find({ user: "677285ef81a24c46e0c633c3" }) // using hardcoded user id
         .sort({ completedAt: -1 })
         .skip(skip)
         .limit(parseInt(limit));
-
-      const total = await Result.countDocuments({ user: req.user._id });
-
+      const total = await Result.countDocuments({ user: "677285ef81a24c46e0c633c3" });
       res.json({
         results,
         pagination: {
@@ -50,9 +38,10 @@ const resultController = {
         }
       });
     } catch (error) {
+      console.error("Error getting results:", error);
       res.status(500).json({ message: error.message });
     }
   }
 };
 
-module.export = resultController;
+module.exports = resultController;

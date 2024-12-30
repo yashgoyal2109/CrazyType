@@ -1,20 +1,25 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { signup } = require("./controller/controller");
-const {resultController} = require("./controller/resultcontroller")
+const { signup, signin } = require("./controller/controller");
+const resultController = require("./controller/resultcontroller")
+require('dotenv').config();
 const cors = require("cors");
+const url = process.env.DATABASE_URL;
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  credentials:true,
+  origin: ["http://localhost:3000", "http://localhost:5173"]
+}));
 
-mongoose.connect("mongodb+srv://lucifer:xnve4729@cluster0.dvhia4y.mongodb.net/")
-
+mongoose.connect(url)
 
 
 app.post("/signup", signup);
-app.post("/result",resultController);
+app.post("/signin",signin)
+app.post("/result",resultController.submitResult);
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });

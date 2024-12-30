@@ -64,6 +64,7 @@ function App() {
         };
         return [...prevData, newDataPoint];
       });
+      submitResult();
     } else {
       setnotFinish(true);
     }
