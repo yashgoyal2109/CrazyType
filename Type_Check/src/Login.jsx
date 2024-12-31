@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const apiurl = import.meta.env.VITE_API_URL;
 
 function Login() {
@@ -7,6 +8,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ function Login() {
       );
 
       if (response.status === 200) {
-        window.location.href = "/";
+        navigate("/");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
