@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { symbol, keypic, settings, info, crown, bell, user } from "../assets/Index";
 import { useNavigate,Link } from "react-router-dom";
 import axios from "axios";
+const apiurl = import.meta.env.VITE_API_URL;
+
 
 const Navbar = ({ callApi }) => {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -20,7 +22,7 @@ const Navbar = ({ callApi }) => {
 
     const handleLogout = async () => {
         try {
-            await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+            await axios.post(`${apiurl}/logout`, {}, { withCredentials: true });
             window.location.href = "/auth/login";
         } catch (err) {
             console.error("Logout failed:", err.response?.data || err.message);
@@ -41,7 +43,7 @@ const Navbar = ({ callApi }) => {
     useEffect(() => {
         const fetchUsername = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/currentuser", {
+                const response = await axios.get(`${apiurl}/currentuser`, {
                     withCredentials: true,
                     headers: {
                         'Content-Type': 'application/json',

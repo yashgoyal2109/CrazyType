@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./components/Navbar";
+const apiurl = import.meta.env.VITE_API_URL;
 
 function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/leaderboard', { withCredentials: true })
+    axios.get(`${apiurl}/leaderboard`, { withCredentials: true })
       .then(response => setLeaderboard(response.data))
       .catch(error => console.error(error));
   }, []);

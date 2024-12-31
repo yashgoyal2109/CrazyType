@@ -6,6 +6,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "r
 import Navbar from "./components/Navbar";
 import Bottom from "./components/Bottom";
 
+const apiurl = import.meta.env.VITE_API_URL;
+
 function App() {
 
   const [performanceData, setPerformanceData] = useState([]);
@@ -32,7 +34,7 @@ function App() {
         timeElapsed: parseInt(((Date.now() - startTime) / 1000).toFixed(0)),
       };
   
-      const response = await axios.post("http://localhost:3000/results", resultData, {
+      const response = await axios.post(`${apiurl}/results`, resultData, {
         withCredentials: true
       });
       console.log("Result submitted:", response.data);
@@ -140,7 +142,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+      await axios.post(`${apiurl}/logout`, {}, { withCredentials: true });
       window.location.href = "/auth/login";
     } catch (err) {
       console.error("Logout failed:", err.response?.data || err.message);

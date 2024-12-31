@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './components/Navbar';
+const apiurl = import.meta.env.VITE_API_URL;
 
 function Profile() {
   const [results, setResults] = useState([]);
@@ -11,7 +12,7 @@ function Profile() {
   const [totalPages, setTotalPages] = useState(1);
 
   const api = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: `${apiurl}`,
     withCredentials: true
   });
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+const apiurl = import.meta.env.VITE_API_URL;
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ function Signup() {
     setError("");
     
     try {
-      const response = await axios.post("http://localhost:3000/signup", formData);
+      const response = await axios.post(`${apiurl}/signup`, formData);
       window.location.href = "/auth/login";
     } catch (error) {
       setError(error.response?.data?.message || "Signup failed!");
