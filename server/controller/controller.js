@@ -11,7 +11,8 @@ exports.signup = async (req, res) => {
     console.log(req.body)
     const { username, email, password } = req.body;
 
-    // Check if user already exists
+
+    
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
     });
