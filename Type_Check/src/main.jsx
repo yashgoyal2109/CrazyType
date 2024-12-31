@@ -4,30 +4,34 @@ import './index.css'
 import App from './App.jsx'
 import Signup from './Signup.jsx';
 import Login from './Login.jsx'
+import Profile from './Profile.jsx'
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
-      path: "/",
-      element: <App />,
+    path: "/",
+    element: <App />,
   },
   {
-      path: "/auth/signup",
-      element: <Signup />,
+    path: "/auth/signup",
+    element: <Signup />,
   },
   {
-      path: "*",
-      element: <h1>Not found</h1>,
+    path: "*",
+    element: <h1>Not found</h1>,
   },
   {
     path: "/auth/login",
-    element:<Login />
+    element: <Login />
   },
-
+  {
+    path: "/profile",
+    element:<Profile />
+  },
 ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </StrictMode>,
 )

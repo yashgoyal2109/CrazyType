@@ -21,12 +21,17 @@ app.use(cors({
 }));
 
 mongoose.connect(url)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 
 app.post("/signup", signup);
 app.post("/signin",signin)
 app.post("/logout",logout)
-app.post("/result",auth,resultController.submitResult);
+app.post("/results",auth,resultController.submitResult);
+app.get("/results",auth,resultController.getResults);
+app.get("/results/stats",auth,resultController.getUserStats);
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+

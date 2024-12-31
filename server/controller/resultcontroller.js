@@ -67,7 +67,28 @@ const resultController = {
       console.error("Error getting results:", error);
       res.status(500).json({ message: error.message });
     }
+  },
+  getUserStats: async (req, res) => {
+    try {
+      const stats = await Result.aggregate([
+        { $match: { user: req.user._id } },
+        { 
+          $group: {
+            _id: null,
+            averageWpm: { $avg: '$wpm' },
+            highestWpm: { $max: '$wpm' },
+            totalTests: { $sum: 1 },
+            averageAccuracy: { $avg: '$accuracy' }
+          }
+        }
+      ]);
+
+      res.json(stats[0] || {});
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
+
 };
 
 module.exports = resultController;
