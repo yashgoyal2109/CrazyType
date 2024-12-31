@@ -9,30 +9,22 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     setError("");
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/signin", {
-        email,
-        password,
-      }, {
-
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.post("http://localhost:3000/signin", 
+        { email, password },
+        {
+          withCredentials: true,
+          headers: { 'Content-Type': 'application/json' }
         }
-      }
       );
 
       if (response.status === 200) {
-        console.log("Login successful:", response.data);
-        console.log(document.cookie);
         window.location.href = "/";
       }
     } catch (err) {
-      console.error("Login failed:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
@@ -40,87 +32,66 @@ function Login() {
   };
 
   return (
-    <section className="bg-main_bg">
-      <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
-        <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
-          <div className="max-w-xl lg:max-w-3xl">
-            <h1 className="mt-6 text-2xl font-bold text-text_color sm:text-3xl md:text-4xl dark:text-white">
-              Welcome to CrazyType
-            </h1>
+    <div className="min-h-screen bg-main_bg flex flex-col justify-center">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md px-4 py-8 sm:px-10">
+        <h1 className="text-2xl sm:text-3xl font-bold text-text_color text-center mb-2">
+          Welcome to CrazyType
+        </h1>
+        
+        <p className="text-gray-500 text-center mb-8">
+          Put your Typing skills to the test.
+        </p>
 
-            <p className="mt-4 leading-relaxed text-gray-500 dark:text-gray-400">
-              Put your Typing skills to the test.
-            </p>
-
-            <form onSubmit={handleLogin} className="mt-8 grid grid-cols-6 gap-6">
-              <div className="col-span-6">
-                <label
-                  htmlFor="Email"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="Email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
-                  required
-                />
-              </div>
-
-              {/* Password Field */}
-              <div className="col-span-6">
-                <label
-                  htmlFor="Password"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="Password"
-                  name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
-                  required
-                />
-              </div>
-
-              {/* Login Button */}
-              <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button
-                  type="submit"
-                  className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white"
-                  disabled={loading}
-                >
-                  {loading ? "Logging in..." : "Login"}
-                </button>
-
-                <p className="mt-4 text-sm text-gray-500 sm:mt-0 dark:text-gray-400">
-                  Don't have an account?
-                  <a
-                    href="/auth/signup"
-                    className="text-gray-700 underline dark:text-gray-200"
-                  >
-                    Sign Up
-                  </a>
-                  .
-                </p>
-              </div>
-            </form>
-
-            {/* Error Message */}
-            {error && (
-              <p className="mt-4 text-sm text-red-500 dark:text-red-400">{error}</p>
-            )}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-200 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
           </div>
-        </main>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-200 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-400">{error}</p>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-8 py-2 rounded-md bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+            <p className="text-sm text-gray-400">
+              Don't have an account?{" "}
+              <a href="/auth/signup" className="text-blue-400 hover:text-blue-300">
+                Sign Up
+              </a>
+            </p>
+          </div>
+        </form>
       </div>
-    </section>
+    </div>
   );
 }
 
