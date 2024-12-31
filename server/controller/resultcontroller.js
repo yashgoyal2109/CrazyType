@@ -1,34 +1,60 @@
-const Result = require('../models/results');
+const Result = require('../models/Result'); 
 
 const resultController = {
   submitResult: async (req, res) => {
     console.log("Received result submission request");
+    console.log("Request body:", req.body);
+    console.log("User:", req.user); 
+    
     try {
-      const { wpm, accuracy, rawWpm, characters, timeElapsed } = req.body;
+      if (!req.user || !req.user._id) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+
+      const { wpm, accuracy, timeElapsed } = req.body;
       
+      if (!wpm || !accuracy || !timeElapsed) {
+        return res.status(400).json({ 
+          message: "Missing required fields",
+          required: { wpm, accuracy, timeElapsed }
+        });
+      }
+
       const result = new Result({
-        user: "677285ef81a24c46e0c633c3", // hardcoded user's id
+        user: req.user._id,
         wpm,
         accuracy,
         timeElapsed
       });
       
-      const savedresult = await result.save();
-      res.status(201).json(savedresult);
+      const savedResult = await result.save();
+      console.log("Saved result:", savedResult); 
+      res.status(201).json(savedResult);
     } catch (error) {
-      console.error("Error submitting result:", error);
+      console.error("Error submitting result:", {
+        error: error.message,
+        stack: error.stack
+      });
       res.status(400).json({ message: error.message });
     }
   },
+
   getResults: async (req, res) => {
     try {
+      if (!req.user || !req.user._id) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+
       const { limit = 10, page = 1 } = req.query;
       const skip = (page - 1) * limit;
-      const results = await Result.find({ user: "677285ef81a24c46e0c633c3" }) // using hardcoded user id
+      
+      const results = await Result.find({ user: req.user._id })
         .sort({ completedAt: -1 })
         .skip(skip)
         .limit(parseInt(limit));
-      const total = await Result.countDocuments({ user: "677285ef81a24c46e0c633c3" });
+        
+      const total = await Result.countDocuments({ user: req.user._id });
+      
       res.json({
         results,
         pagination: {

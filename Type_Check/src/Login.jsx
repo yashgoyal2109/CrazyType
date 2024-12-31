@@ -17,11 +17,18 @@ function Login() {
       const response = await axios.post("http://localhost:3000/signin", {
         email,
         password,
-      });
+      }, {
+
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+      );
 
       if (response.status === 200) {
         console.log("Login successful:", response.data);
-        // Redirect to the home page or dashboard
+        console.log(document.cookie);
         window.location.href = "/";
       }
     } catch (err) {

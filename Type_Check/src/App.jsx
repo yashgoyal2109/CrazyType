@@ -135,6 +135,17 @@ function App() {
     setCount((prev) => prev + 1);
   };
 
+
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+      window.location.href = "/auth/login";
+    } catch (err) {
+      console.error("Logout failed:", err.response?.data || err.message);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center h-screen justify-between px-[7rem] py-10 bg-main_bg">
       <div className="flex flex-row justify-between w-full items-center">
@@ -274,6 +285,9 @@ function App() {
 
       <div>
         <p className="text-text_color">Type the text above</p>
+        <button onClick={handleLogout}>
+          logout
+        </button>
       </div>
     </div>
   );
