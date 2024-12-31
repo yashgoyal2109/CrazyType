@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
@@ -23,10 +23,8 @@ module.exports = {
           '50%': { transform: 'scale(1.2)', opacity: '0.7' },
           '100%': { transform: 'scale(1.2)', opacity: '1' },
         },
-
       },
     },
   },
   plugins: [],
-
 }
