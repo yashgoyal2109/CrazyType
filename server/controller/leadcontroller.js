@@ -2,7 +2,6 @@ const Result = require("../models/Result");
 
 exports.leaderboard = async (req, res) => {
   try {
-    // Fetch results and populate user data
     const results = await Result.find()
       .populate("user", "username") // Populate the `user` field with the `username`
       .lean(); // Convert Mongoose documents to plain JavaScript objects
