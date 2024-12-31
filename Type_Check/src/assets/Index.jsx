@@ -5,5 +5,6 @@ import bell from './bell.svg'
 import info from './info.svg'
 import settings from './settings.svg'
 import user from './user.svg'
+import reload from './reload.svg'
 
-export {symbol,settings,keypic,crown,bell,info,user}
+export {symbol,settings,keypic,reload,crown,bell,info,user}

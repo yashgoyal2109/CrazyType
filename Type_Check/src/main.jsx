@@ -6,6 +6,7 @@ import Signup from './Signup.jsx';
 import Login from './Login.jsx'
 import Profile from './Profile.jsx'
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Leaderboard from './LeaderBoard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -26,8 +27,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element:<Profile />
+    element: <Profile />
   },
+  {
+    path: "/leaderboard",
+    element: <Leaderboard />
+  }
 ]);
 
 createRoot(document.getElementById('root')).render(

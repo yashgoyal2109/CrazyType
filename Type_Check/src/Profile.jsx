@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from './components/Navbar';
 
 function Profile() {
   const [results, setResults] = useState([]);
@@ -54,10 +55,17 @@ function Profile() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+
+  const callApi = () => {
+    window.location.href = "/";
+};
+
   return (
+   
     <div className="p-4 bg-main_bg h-screen">
+       <Navbar callApi={callApi} />
       {stats && (
-        <div className="mb-6 p-4 rounded">
+        <div className="mb-6 p-10 rounded">
           <h2 className="text-3xl text-heading_color font-bold mb-3">Your Stats</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-10">
             <div className='flex flex-col items-center justify-center'>

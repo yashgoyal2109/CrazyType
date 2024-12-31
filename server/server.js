@@ -1,12 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { signup, signin, logout } = require("./controller/controller");
+const { signup, signin, logout, getCurrentUser } = require("./controller/controller");
 const resultController = require("./controller/resultcontroller")
 require('dotenv').config();
 const cors = require("cors");
 const auth = require("./middleware/auth")
 const url = process.env.DATABASE_URL;
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
+const { leaderboard } = require("./controller/leadcontroller");
 
 
 const app = express();
@@ -31,6 +32,8 @@ app.post("/logout",logout)
 app.post("/results",auth,resultController.submitResult);
 app.get("/results",auth,resultController.getResults);
 app.get("/results/stats",auth,resultController.getUserStats);
+app.get("/currentuser",auth,getCurrentUser);
+app.get("/leaderboard",leaderboard);
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });

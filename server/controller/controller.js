@@ -76,3 +76,28 @@ exports.logout = async (req, res) => {
   });
   res.status(200).send({ message: "Logged out successfully" });
 };
+
+
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user: formatUserResponse(user)
+    });
+  } catch (error) {
+    console.error("Error caught:", error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

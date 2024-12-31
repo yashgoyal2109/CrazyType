@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { symbol, keypic, settings, info, crown, bell, user } from "./assets/Index";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import Navbar from "./components/Navbar";
+import Bottom from "./components/Bottom";
 
 function App() {
 
@@ -30,13 +32,12 @@ function App() {
         timeElapsed: parseInt(((Date.now() - startTime) / 1000).toFixed(0)),
       };
   
-      const response = await axios.post("http://localhost:3000/result", resultData, {
+      const response = await axios.post("http://localhost:3000/results", resultData, {
         withCredentials: true
       });
       console.log("Result submitted:", response.data);
     } catch (error) {
       console.error("Error submitting result:", error);
-      alert("Failed to save result!");
     }
   };
 
@@ -148,25 +149,7 @@ function App() {
 
   return (
     <div className="flex flex-col items-center h-screen justify-between px-[7rem] py-10 bg-main_bg">
-      <div className="flex flex-row justify-between w-full items-center">
-        <div className="w-1/3">
-          <div className="flex items-baseline justify-evenly">
-            <img src={symbol} alt="logo" className="w-10 cursor-pointer" />
-            <p className="text-2xl font-bold cursor-pointer text-heading_color">CrazyType</p>
-            <img src={keypic} alt="" className="image-small cursor-pointer" onClick={callApi} />
-            <img src={crown} alt="" className="image-small cursor-pointer" />
-            <img src={info} alt="" className="image-small cursor-pointer" />
-            <img src={settings} alt="" className="image-small cursor-pointer" />
-          </div>
-        </div>
-        <div className="w-1/6">
-          <div className="flex items-center justify-evenly">
-            <img src={bell} alt="" className="image-small cursor-pointer" />
-            <img src={user} alt="" className="image-small cursor-pointer" />
-            <p className="text-l cursor-pointer text-text_color">Lucifer</p>
-          </div>
-        </div>
-      </div>
+      <Navbar callApi={callApi}/>
 
       {notfinish ? (
         <div>
@@ -284,10 +267,7 @@ function App() {
       )}
 
       <div>
-        <p className="text-text_color">Type the text above</p>
-        <button onClick={handleLogout}>
-          logout
-        </button>
+      <Bottom currentPhrase={word} />
       </div>
     </div>
   );
