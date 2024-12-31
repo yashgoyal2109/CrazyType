@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const signInSchema = require("../validator/validator")
 const { generateToken } = require("../utils/token")
 const { formatUserResponse } = require("../utils/token");
-const User = require("../models/User.js");
+const User = require("../models/user");
 
 
 exports.signup = async (req, res) => {
