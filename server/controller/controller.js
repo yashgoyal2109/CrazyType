@@ -1,5 +1,5 @@
 const { userSchema } = require("../validator/validator");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const signInSchema = require("../validator/validator")
 const { generateToken } = require("../utils/token")
 const { formatUserResponse } = require("../utils/token");
